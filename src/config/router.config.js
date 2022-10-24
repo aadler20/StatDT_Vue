@@ -1,0 +1,318 @@
+// eslint-disable-next-line
+import { UserLayout, BasicLayout, BlankLayout } from '@/layouts'
+import { bxAnaalyse } from '@/core/icons'
+
+const RouteView = {
+  name: 'RouteView',
+  render: h => h('router-view')
+}
+
+export const asyncRouterMap = [
+  {
+    path: '/',
+    name: 'index',
+    component: BasicLayout,
+    meta: { title: 'menu.home' },
+    redirect: '/dashboard/workplace',
+    children: [
+      // dashboard
+      {
+        path: '/dashboard',
+        name: 'dashboard',
+        redirect: '/dashboard/workplace',
+        component: RouteView,
+        meta: { title: 'menu.dashboard', keepAlive: true, icon: bxAnaalyse, permission: ['admin', 'user'] },
+        children: [
+          {
+            path: '/dashboard/analysis/:pageNo([1-9]\\d*)?',
+            name: 'Analysis',
+            component: () => import('@/views/dashboard/Analysis'),
+            meta: { title: 'menu.dashboard.analysis', keepAlive: false, permission: ['admin', 'user'] }
+          },
+          // 外部链接
+          {
+            path: 'https://nmap.org/',
+            name: 'Monitor',
+            meta: { title: 'menu.dashboard.monitor', target: '_blank' }
+          },
+          {
+            path: '/dashboard/workplace',
+            name: 'Workplace',
+            component: () => import('@/views/dashboard/Workplace'),
+            meta: { title: 'menu.dashboard.workplace', keepAlive: true, permission: ['admin', 'user'] }
+          }
+        ]
+      },
+      // forms
+      {
+        path: '/form',
+        redirect: '/form/base-form',
+        component: RouteView,
+        meta: { title: 'menu.form', icon: 'form', permission: ['form'] },
+        children: [
+          {
+            path: '/form/base-form',
+            name: 'BaseForm',
+            component: () => import('@/views/form/basicForm'),
+            meta: { title: 'menu.form.basic-form', keepAlive: true, permission: ['admin', 'user'] }
+          },
+          {
+            path: '/form/step-form',
+            name: 'StepForm',
+            component: () => import('@/views/form/stepForm/StepForm'),
+            meta: { title: 'menu.form.step-form', keepAlive: true, permission: ['admin', 'user'] }
+          },
+          {
+            path: '/form/advanced-form',
+            name: 'AdvanceForm',
+            component: () => import('@/views/form/advancedForm/AdvancedForm'),
+            meta: { title: 'menu.form.advanced-form', keepAlive: true, permission: ['admin', 'user'] }
+          }
+        ]
+      },
+      // list
+      {
+        path: '/list',
+        name: 'list',
+        component: RouteView,
+        redirect: '/list/table-list',
+        meta: { title: 'menu.list', icon: 'table', permission: ['admin', 'user'] },
+        children: [
+          {
+            path: '/list/table-list/:pageNo([1-9]\\d*)?',
+            name: 'TableListWrapper',
+            hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+            component: () => import('@/views/list/TableList'),
+            meta: { title: 'menu.list.table-list', keepAlive: true, permission: ['admin', 'user'] }
+          },
+          {
+            path: '/list/basic-list',
+            name: 'BasicList',
+            component: () => import('@/views/list/BasicList'),
+            meta: { title: 'menu.list.basic-list', keepAlive: true, permission: ['admin', 'user'] }
+          },
+          {
+            path: '/list/card',
+            name: 'CardList',
+            component: () => import('@/views/list/CardList'),
+            meta: { title: 'menu.list.card-list', keepAlive: true, permission: ['admin', 'user'] }
+          },
+          {
+            path: '/list/search',
+            name: 'SearchList',
+            component: () => import('@/views/list/search/SearchLayout'),
+            redirect: '/list/search/article',
+            meta: { title: 'menu.list.search-list', keepAlive: true, permission: ['admin', 'user'] },
+            children: [
+              {
+                path: '/list/search/article',
+                name: 'SearchArticles',
+                component: () => import('../views/list/search/Article'),
+                meta: { title: 'menu.list.search-list.articles', permission: ['admin', 'user'] }
+              },
+              {
+                path: '/list/search/project',
+                name: 'SearchProjects',
+                component: () => import('../views/list/search/Projects'),
+                meta: { title: 'menu.list.search-list.projects', permission: ['admin', 'user'] }
+              },
+              {
+                path: '/list/search/application',
+                name: 'SearchApplications',
+                component: () => import('../views/list/search/Applications'),
+                meta: { title: 'menu.list.search-list.applications', permission: ['admin', 'user'] }
+              }
+            ]
+          }
+        ]
+      },
+
+      // profile
+      {
+        path: '/profile',
+        name: 'profile',
+        component: RouteView,
+        redirect: '/profile/basic',
+        meta: { title: 'menu.profile', icon: 'profile', permission: ['admin', 'user'] },
+        children: [
+          {
+            path: '/profile/basic',
+            name: 'ProfileBasic',
+            component: () => import('@/views/profile/basic'),
+            meta: { title: 'menu.profile.basic', permission: ['admin', 'user'] }
+          },
+          {
+            path: '/profile/advanced',
+            name: 'ProfileAdvanced',
+            component: () => import('@/views/profile/advanced/Advanced'),
+            meta: { title: 'menu.profile.advanced', permission: ['admin', 'user'] }
+          }
+        ]
+      },
+
+      // result
+      {
+        path: '/result',
+        name: 'result',
+        component: RouteView,
+        redirect: '/result/success',
+        meta: { title: 'menu.result', icon: 'check-circle-o', permission: ['admin', 'user'] },
+        children: [
+          {
+            path: '/result/success',
+            name: 'ResultSuccess',
+            component: () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
+            meta: { title: 'menu.result.success', keepAlive: false, hiddenHeaderContent: true, permission: ['admin', 'user'] }
+          },
+          {
+            path: '/result/fail',
+            name: 'ResultFail',
+            component: () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
+            meta: { title: 'menu.result.fail', keepAlive: false, hiddenHeaderContent: true, permission: ['admin', 'user'] }
+          }
+        ]
+      },
+
+      // Exception
+      {
+        path: '/exception',
+        name: 'exception',
+        component: RouteView,
+        redirect: '/exception/403',
+        meta: { title: 'menu.exception', icon: 'warning', permission: ['admin', 'user'] },
+        children: [
+          {
+            path: '/exception/403',
+            name: 'Exception403',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
+            meta: { title: 'menu.exception.not-permission', permission: ['admin', 'user'] }
+          },
+          {
+            path: '/exception/404',
+            name: 'Exception404',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
+            meta: { title: 'menu.exception.not-find', permission: ['admin', 'user'] }
+          },
+          {
+            path: '/exception/500',
+            name: 'Exception500',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500'),
+            meta: { title: 'menu.exception.server-error', permission: ['admin', 'user'] }
+          }
+        ]
+      },
+
+      // account
+      {
+        path: '/account',
+        component: RouteView,
+        redirect: '/account/center',
+        name: 'account',
+        meta: { title: 'menu.account', icon: 'user', keepAlive: true, permission: ['user'] },
+        children: [
+          {
+            path: '/account/center',
+            name: 'center',
+            component: () => import('@/views/account/center'),
+            meta: { title: 'menu.account.center', keepAlive: true, permission: ['user'] }
+          },
+          {
+            path: '/account/settings',
+            name: 'settings',
+            component: () => import('@/views/account/settings/Index'),
+            meta: { title: 'menu.account.settings', hideHeader: true, permission: ['user'] },
+            redirect: '/account/settings/basic',
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/account/settings/basic',
+                name: 'BasicSettings',
+                component: () => import('@/views/account/settings/BasicSetting'),
+                meta: { title: 'account.settings.menuMap.basic', hidden: true, permission: ['user'] }
+              },
+              {
+                path: '/account/settings/security',
+                name: 'SecuritySettings',
+                component: () => import('@/views/account/settings/Security'),
+                meta: {
+                  title: 'account.settings.menuMap.security',
+                  hidden: true,
+                  keepAlive: true,
+                  permission: ['user']
+                }
+              },
+              {
+                path: '/account/settings/custom',
+                name: 'CustomSettings',
+                component: () => import('@/views/account/settings/Custom'),
+                meta: { title: 'account.settings.menuMap.custom', hidden: true, keepAlive: true, permission: ['user'] }
+              },
+              {
+                path: '/account/settings/binding',
+                name: 'BindingSettings',
+                component: () => import('@/views/account/settings/Binding'),
+                meta: { title: 'account.settings.menuMap.binding', hidden: true, keepAlive: true, permission: ['user'] }
+              },
+              {
+                path: '/account/settings/notification',
+                name: 'NotificationSettings',
+                component: () => import('@/views/account/settings/Notification'),
+                meta: {
+                  title: 'account.settings.menuMap.notification',
+                  hidden: true,
+                  keepAlive: true,
+                  permission: ['user']
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
+]
+
+/**
+ * 基础路由
+ * @type { *[] }
+ */
+export const constantRouterMap = [
+  {
+    path: '/user',
+    component: UserLayout,
+    redirect: '/user/login',
+    hidden: true,
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Login')
+      },
+      {
+        path: 'register',
+        name: 'register',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register')
+      },
+      {
+        path: 'register-result',
+        name: 'registerResult',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/RegisterResult')
+      },
+      {
+        path: 'recover',
+        name: 'recover',
+        component: undefined
+      }
+    ]
+  },
+
+  {
+    path: '/404',
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
+  }
+]
