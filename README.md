@@ -1,6 +1,7 @@
 # StatDT_Vue
-Front-End code used in **Introduction to Data Technologies** course for developing a Single Page Application with Flask and Vue.js 
-copied from [ant-design-pro-vue](https://pro.antdv.com/).
+Front-End code used in **Introduction to Data Technologies** course for developing a Single Page Application with Flask and Vue.js. 
+
+> Note: Vue code copied from [ant-design-pro-vue](https://pro.antdv.com/).
 
 ### Env and dependencies
 
